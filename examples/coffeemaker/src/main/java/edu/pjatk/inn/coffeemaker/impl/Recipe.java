@@ -8,16 +8,40 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 /**
+ * Recipe class
+ *
  * @author   Sarah & Mike
  */
 public class Recipe implements Serializable {
-    private String name;
+	/**
+	 * Name of recipe: string
+	 */
+	private String name;
+	/**
+	 * Price of recipe: int
+	 */
     private int price;
+	/**
+	 * amount of coffee for a single recipe: int
+	 */
     private int amtCoffee;
+	/**
+	 * amount of milk for a single recipe: int
+	 */
     private int amtMilk;
+	/**
+	 * amount of sugar for a single recipe: int
+	 */
     private int amtSugar;
+	/**
+	 * amount of chocolate for a single recipe: int
+	 */
     private int amtChocolate;
-    
+
+	/**
+	 * Recipe class constructor
+	 * Initialize each attribute
+	 */
     public Recipe() {
     	this.name = "";
     	this.price = 0;
@@ -26,101 +50,143 @@ public class Recipe implements Serializable {
     	this.amtSugar = 0;
     	this.amtChocolate = 0;
     }
-    
-    /**
-	 * @return   Returns the amtChocolate.
+
+	/**
+	 * Get amount of chocolate
+	 * @return int Returns the amtChocolate.
 	 */
     public int getAmtChocolate() {
 		return amtChocolate;
 	}
-    /**
-	 * @param amtChocolate   The amtChocolate to setValue.
+
+	/**
+	 * Add the amtChocolate if it is more than 0
+	 * @param amtChocolate The amtChocolate to setValue.
 	 */
     public void setAmtChocolate(int amtChocolate) {
 		if (amtChocolate >= 0) {
 			this.amtChocolate = amtChocolate;
 		} 
 	}
-    /**
-	 * @return   Returns the amtCoffee.
+
+	/**
+	 * Get amount of coffee
+	 * @return int Returns the amtCoffee.
 	 */
     public int getAmtCoffee() {
 		return amtCoffee;
 	}
-    /**
-	 * @param amtCoffee   The amtCoffee to setValue.
+
+	/**
+	 * Add the amtCoffee if it is more than 0
+	 * @param amtCoffee The amtCoffee to setValue.
 	 */
     public void setAmtCoffee(int amtCoffee) {
 		if (amtCoffee >= 0) {
 			this.amtCoffee = amtCoffee;
 		} 
 	}
-    /**
-	 * @return   Returns the amtMilk.
+
+	/**
+	 * Get amount of milk
+	 * @return int Returns the amtMilk.
 	 */
     public int getAmtMilk() {
 		return amtMilk;
 	}
-    /**
-	 * @param amtMilk   The amtMilk to setValue.
+
+	/**
+	 * Add the amtMilk if it is more than 0
+	 * @param amtMilk The amtMilk to setValue.
 	 */
     public void setAmtMilk(int amtMilk) {
 		if (amtMilk >= 0) {
 			this.amtMilk = amtMilk;
 		} 
 	}
-    /**
-	 * @return   Returns the amtSugar.
+
+	/**
+	 * Get amount of sugar
+	 * @return int Returns the amtSugar.
 	 */
     public int getAmtSugar() {
 		return amtSugar;
 	}
-    /**
-	 * @param amtSugar   The amtSugar to setValue.
+
+	/**
+	 * Add the amtSugar if it is more than 0
+	 * @param amtSugar The amtSugar to setValue.
 	 */
     public void setAmtSugar(int amtSugar) {
 		if (amtSugar >= 0) {
 			this.amtSugar = amtSugar;
 		} 
 	}
-    /**
-	 * @return   Returns the key.
+
+	/**
+	 * Get name of recipe
+	 * @return string Returns the key.
 	 */
     public String getName() {
 		return name;
 	}
-    /**
-	 * @param name   The key to setValue.
+
+	/**
+	 * Set the recipe name if it is not null
+	 * @param name The key to setValue.
 	 */
     public void setName(String name) {
     	if(name != null) {
     		this.name = name;
     	}
 	}
-    /**
-	 * @return   Returns the price.
+
+	/**
+	 * Get price
+	 * @return int Returns the price.
 	 */
     public int getPrice() {
 		return price;
 	}
-    /**
-	 * @param price   The price to setValue.
+
+	/**
+	 * Set the price name if it is more than 0
+	 * @param price The price to setValue.
 	 */
     public void setPrice(int price) {
 		if (price >= 0) {
 			this.price = price;
 		} 
-	} 
+	}
+
+	/**
+	 * Returns true if there is already the same name in coffee maker,
+	 * otherwise returns false
+	 * @param r Recipe object
+	 * @return boolean
+	 */
     public boolean equals(Recipe r) {
         if((this.name).equals(r.getName())) {
             return true;
         }
         return false;
     }
+
+	/**
+	 * Returns the converted name
+	 * @return string
+	 */
     public String toString() {
     	return name;
     }
 
+	/**
+	 * Create a recipe object,
+	 * catch RemoteException and list it in throws clause
+	 * @param context The context of recipe object.
+	 * @return Recipe
+	 * @throws ContextException Throws ContextException if RemoteException found
+	 */
 	static public Recipe getRecipe(Context context) throws ContextException {
 		Recipe r = new Recipe();
 		try {
@@ -136,6 +202,12 @@ public class Recipe implements Serializable {
 		return r;
 	}
 
+	/**
+	 * Get context and assign values to each attribute in Recipe class
+	 * @param recipe Newly created recipe object
+	 * @return Context
+	 * @throws ContextException Throws ContextException if RemoteException found
+	 */
 	static public Context getContext(Recipe recipe) throws ContextException {
 		Context cxt = new ServiceContext();
 		cxt.putValue("key", recipe.getName());
