@@ -1,0 +1,27 @@
+#1
+BUGMethod: 		CoffeeMaker.NUM_RECIPES / Line 25
+Description:    Since only three recipes may be added to the CoffeeMaker. We changed recipe number variable from 4 to 3.
+TEST FOR THAT:  CoffeeMakerTest.testAddRecipe
+
+#2
+BUGMethod: 	    CoffeeMaker.deleteRecipe / Line 91
+Description:    Since the recipe may be deleted from the CoffeeMaker if it exists in the list of recipes and the recipe 
+to be deleted need to be chosen by its name. We added a control mechanism to the original code.
+TEST FOR THAT:  CoffeeMakerTest.testDeleteRecipe
+
+#3
+BUGMethod: 		CoffeeMaker.editRecipe / Line 125
+Description:    Since recipe name may not be changed to a name of any other recipe in the recipe list, we changed the control 
+mechanism in the code base
+TEST FOR THAT:  CoffeeMakerTest.testEditRecipe
+
+#4
+BUGMethod: 		CoffeeMaker.addInventory / Line 150
+Description:	There was a problem with sugar variable condition. It should be less than 0 like others.
+TEST FOR THAT:  CoffeeMakerTest.testAddandCheckInventory
+
+#5
+BUGMethod: 		CoffeeMaker.makeCoffee / Line 187
+Description:	Since the the inventory of the coffee amount should be decreased after making a coffee we need to subtract the used 
+coffee amount from the available coffee amount
+TEST FOR THAT:  CoffeeMakerTest.testMakeCoffee

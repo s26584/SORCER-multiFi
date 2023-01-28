@@ -22,7 +22,7 @@ public class CoffeeMaker implements CoffeeMaking, CoffeeService {
 	 */
 	private Recipe [] recipeArray;
 	/** Number of getRecipes in coffee maker */
-	private final int NUM_RECIPES = 4;
+	private final int NUM_RECIPES = 3;
 	/** Array describing if the array is full */
 	private boolean [] recipeFull;
 	/** Inventory of the coffee maker */
@@ -88,10 +88,11 @@ public class CoffeeMaker implements CoffeeMaking, CoffeeService {
         boolean canDeleteRecipe = false;
         if(r != null) {
 	        for(int i = 0; i < NUM_RECIPES; i++) {
-	            if(r.equals(recipeArray[i])) {
-	                recipeArray[i] = recipeArray[i];  
-	                canDeleteRecipe = true;
-	            }
+				if(recipeFull[i] && r.equals(recipeArray[i])) {
+					recipeArray[i] = new Recipe();
+					recipeFull[i] = false;
+					canDeleteRecipe = true;
+				}
 	        }
         }
         return canDeleteRecipe;
@@ -121,8 +122,8 @@ public class CoffeeMaker implements CoffeeMaking, CoffeeService {
     public boolean editRecipe(Recipe oldRecipe, Recipe newRecipe) {
         boolean canEditRecipe = false;
         for(int i = 0; i < NUM_RECIPES; i++) {
-        	if(recipeArray[i].getName() != null) {
-	            if(newRecipe.equals(recipeArray[i])) {
+			if(recipeArray[i].getName() != null && !recipeArray[i].getName().isEmpty()) {
+				if(oldRecipe.equals(recipeArray[i])) {
 	            	recipeArray[i] = new Recipe();
 	            	if(addRecipe(newRecipe)) {
 	            		canEditRecipe = true;
@@ -146,7 +147,7 @@ public class CoffeeMaker implements CoffeeMaking, CoffeeService {
      */
     public boolean addInventory(int amtCoffee, int amtMilk, int amtSugar, int amtChocolate) {
         boolean canAddInventory = true;
-        if(amtCoffee < 0 || amtMilk < 0 || amtSugar > 0 || amtChocolate < 0) {  
+		if(amtCoffee < 0 || amtMilk < 0 || amtSugar < 0 || amtChocolate < 0) {
             canAddInventory = false;
         }
         else {
@@ -182,7 +183,7 @@ public class CoffeeMaker implements CoffeeMaking, CoffeeService {
             canMakeCoffee = false;
         }
         if(canMakeCoffee) {
-	        inventory.setCoffee(inventory.getCoffee() + r.getAmtCoffee());
+	        inventory.setCoffee(inventory.getCoffee() - r.getAmtCoffee());
 	        inventory.setMilk(inventory.getMilk() - r.getAmtMilk());
 	        inventory.setSugar(inventory.getSugar() - r.getAmtSugar());
 	        inventory.setChocolate(inventory.getChocolate() - r.getAmtChocolate());

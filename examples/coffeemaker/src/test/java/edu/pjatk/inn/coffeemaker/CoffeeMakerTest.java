@@ -13,12 +13,12 @@ import org.sorcer.test.SorcerTestRunner;
 import sorcer.service.ContextException;
 import sorcer.service.Routine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;;
 import static sorcer.eo.operator.*;
 import static sorcer.so.operator.eval;
 import static sorcer.so.operator.exec;
 
+import static org.junit.Assert.*;
 /**
  * @author Mike Sobolewski
  */
@@ -69,10 +69,102 @@ public class CoffeeMakerTest {
 		americano.setAmtChocolate(0);
 	}
 
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	@Test
 	public void testAddRecipe() {
 		assertTrue(coffeeMaker.addRecipe(espresso));
+		assertTrue(coffeeMaker.addRecipe(americano));
+		assertTrue(coffeeMaker.addRecipe(macchiato));
+        assertFalse(coffeeMaker.addRecipe(mocha));
+        
 	}
+
+
+    @Test
+    public void testDeleteRecipe() {
+        assertTrue(coffeeMaker.addRecipe(mocha));
+        assertTrue(coffeeMaker.deleteRecipe(mocha));
+        assertEquals(coffeeMaker.getRecipeForName("mocha"), null);
+        assertFalse(coffeeMaker.deleteRecipe(mocha));
+    }
+
+
+    @Test
+    public void testEditRecipe() {
+        Recipe mocha_new = new Recipe();
+        mocha_new.setName("mocha");
+        mocha_new.setPrice(40);
+        mocha_new.setAmtCoffee(7);
+        mocha_new.setAmtMilk(1);
+        mocha_new.setAmtSugar(2);
+        mocha_new.setAmtChocolate(0);
+
+        assertTrue(coffeeMaker.addRecipe(espresso));
+        assertTrue(coffeeMaker.addRecipe(mocha));
+        assertFalse(coffeeMaker.editRecipe(espresso, mocha_new));
+    }
+
+
+    @Test
+    public void testAddandCheckInventory(){
+        inventory.setCoffee(50);
+        inventory.setSugar(50);
+        inventory.setMilk(50);
+        inventory.setChocolate(50);
+        assertEquals(coffeeMaker.checkInventory().getCoffee(), 50);
+        assertEquals(coffeeMaker.checkInventory().getMilk(), 50);
+        assertEquals(coffeeMaker.checkInventory().getSugar(), 50);
+        assertEquals(coffeeMaker.checkInventory().getChocolate(), 50);
+
+        assertTrue(coffeeMaker.addInventory(20,0,0,0));
+        assertEquals(coffeeMaker.checkInventory().getCoffee(), 70);
+
+        assertTrue(coffeeMaker.addInventory(0,20,0,0));
+        assertEquals(coffeeMaker.checkInventory().getMilk(), 70);
+
+        assertTrue(coffeeMaker.addInventory(0,0,20,0));
+        assertEquals(coffeeMaker.checkInventory().getSugar(), 70);
+
+        assertTrue(coffeeMaker.addInventory(0,0,0,20));
+        assertEquals(coffeeMaker.checkInventory().getChocolate(), 70);
+
+		assertFalse(coffeeMaker.addInventory(-20,0,0,0));
+		assertFalse(coffeeMaker.addInventory(0,-20,0,0));
+		assertFalse(coffeeMaker.addInventory(0,0,-20,0));
+		assertFalse(coffeeMaker.addInventory(0,0,0,-20));
+    }
+
+
+    @Test
+    public void testMakeCoffe() {
+        inventory.setChocolate(50);
+        inventory.setCoffee(50);
+        inventory.setSugar(50);
+        inventory.setMilk(50);
+
+        coffeeMaker.makeCoffee(espresso, 100);
+        assertEquals(coffeeMaker.checkInventory().getCoffee(), 50-espresso.getAmtCoffee());
+
+    }
+
+
+    @Test
+    public void testPurchase(){
+        inventory.setChocolate(50);
+        inventory.setCoffee(50);
+        inventory.setSugar(50);
+        inventory.setMilk(50);
+		assertTrue(coffeeMaker.checkInventory().enoughIngredients(mocha));
+        assertEquals(coffeeMaker.makeCoffee(espresso, 100), 50);
+        assertEquals(coffeeMaker.makeCoffee(mocha, 100), 0);
+    }
+
+
+
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	@Test
 	public void testContextCofee() throws ContextException {
@@ -121,6 +213,7 @@ public class CoffeeMakerTest {
 	public void makeCoffee() throws Exception {
 		coffeeMaker.addRecipe(espresso);
 		assertEquals(coffeeMaker.makeCoffee(espresso, 200), 150);
+		assertEquals(inventory.getCoffee(), 9);
 	}
 
 }
