@@ -259,6 +259,30 @@ public class CoffeeServiceTest {
 		assertEquals(value(out, "coffee/change"), 70);
 		assertEquals(value(out, "delivery/cost"), 60);
 		assertEquals(value(out, "change$"), 10);
+
+		// Start code HW4
+
+		Task coffee = task("coffee", sig("makeCoffee", CoffeeMake.class), context(
+			inVal("recipe/key", "latte"),
+			inVal("price", 80),
+			inVal("recipe", latte),
+			outPaths("coffee/change")));
+
+		Task payment = task("payment", sig("payCoffee", CoffeePayment.class), context(
+			inVal("methodPayment/key", "creditCard"),
+			inVal("amount", 80),
+			inVal("methodPayment", creditCard)));
+			outPaths("coffee/change", "payment/paid", "change$")));
+
+		Task point = task("point", sig("getPoint", GetPoint.class), context(
+			inVal("firstName", "Nader"),
+			inVal("lastName", "Bouaziz"),
+			inVal("puchaseId", 123),
+			outPaths("coffee/change", "payment/paid", "point/sent", "change$", "paid$")));
+
+		Block drinkCoffee = block(context(inVal("coffee/paid"), val("coffee/change", val("point/sent"))), coffee, payment, point);
+
+		// End code HW4
 	}
 
 	@Test
